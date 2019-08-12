@@ -62,7 +62,7 @@ public class PDFTable {
      * returns the settings that are used as templates
      * for every new page
      *
-     * @return
+     * @return returns the page settings
      */
     public PageSettings getPageSettings() {
         return pageSettings;
@@ -111,11 +111,11 @@ public class PDFTable {
      * renders this table to the given document and starts at the given
      * first page at the given coordinates.
      *
-     * @param doc
-     * @param firstPage
-     * @param x
-     * @param y
+     * @param firstPage the first page to start to render the table
+     * @param x the x position to render the table
+     * @param y the y position to render the table
      * @return returns a list of pages including the given first page
+     * @throws IOException
      */
     public List<PDFPageWithStream> render(PDFPageWithStream firstPage, float x, float y) throws IOException {
         final PDDocument doc = firstPage.getDoc();
@@ -260,7 +260,8 @@ public class PDFTable {
      * the table will be wrapped. Note that multiple headings
      * are not accounted for.
      *
-     * @return
+     * @return returns the height of the table
+     * @throws IOException
      */
     public float getHeight() throws IOException {
         List<Float> rowHeights = getRowHeights();
@@ -287,9 +288,9 @@ public class PDFTable {
      * the table and sets the column's with as a pecentage
      * of that width
      *
-     * @param tableWidth
-     * @param columnWidthPercent
-     * @return
+     * @param tableWidth the total table width
+     * @param columnWidthPercent the percentages for the columns
+     * @return returns a new PDFTable object
      */
     public static PDFTable createByRelativeColumnWidth(float tableWidth, float... columnWidthPercent) {
         final float[] columnWidths = new float[columnWidthPercent.length];
@@ -311,8 +312,8 @@ public class PDFTable {
      * AUTO_DETERMINE_COLUMN_WIDTH.
      *
      * @param tableWidth the total width
-     * @param columnWidths
-     * @return
+     * @param columnWidths the fixed widths for the columns
+     * @return returns a new PDFTable object
      */
     public static PDFTable createWithSomeFixedColumnWidths(float tableWidth, float... columnWidths) {
         final float[] resultWidths = new float[columnWidths.length];

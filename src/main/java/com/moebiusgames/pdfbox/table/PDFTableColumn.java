@@ -112,7 +112,7 @@ public class PDFTableColumn {
      * returns the size of the heading font or if not set the size
      * of the normal cell font
      *
-     * @return
+     * @return the font size
      */
     public int getHeadingFontSize() {
         return headingFontSize != null ? headingFontSize : this.getFontSize();
@@ -123,8 +123,8 @@ public class PDFTableColumn {
      * set to null signals to use the font size used for
      * all other cells
      *
-     * @param headingFontSize
-     * @return
+     * @param headingFontSize the font size
+     * @return this object for chaining
      */
     public PDFTableColumn setHeadingFontSize(Integer headingFontSize) {
         this.headingFontSize = headingFontSize;
@@ -136,7 +136,7 @@ public class PDFTableColumn {
      * for the normal cells when no special font is set for the
      * heading
      *
-     * @return
+     * @return the font
      */
     public PDFont getHeadingFont() {
         return headingFont != null ? headingFont : getFont();
@@ -146,8 +146,8 @@ public class PDFTableColumn {
      * sets the font for the heading or when set to null signals
      * to use the font used for all other cells
      *
-     * @param headingFont
-     * @return
+     * @param headingFont the font
+     * @return this object for chaining
      */
     public PDFTableColumn setHeadingFont(PDFont headingFont) {
         this.headingFont = headingFont;
@@ -159,7 +159,7 @@ public class PDFTableColumn {
      * for the normal cells when no special alignment is set for the
      * heading
      *
-     * @return
+     * @return the alignment
      */
     public Align getHeadingAlign() {
         return headingAlign != null ? headingAlign : getAlign();
@@ -169,8 +169,8 @@ public class PDFTableColumn {
      * sets the alignment for the heading or when set to null signals
      * to use the alignment used for all other cells
      *
-     * @param headingAlign
-     * @return
+     * @param headingAlign the alignment
+     * @return this object for chaining
      */
     public PDFTableColumn setHeadingAlign(Align headingAlign) {
         this.headingAlign = headingAlign;
@@ -182,7 +182,7 @@ public class PDFTableColumn {
      * for the normal cells when no special font color is set for the
      * heading
      *
-     * @return
+     * @return the color
      */
     public Color getHeadingFontColor() {
         return headingFontColor != null ? headingFontColor : getFontColor();
@@ -192,8 +192,8 @@ public class PDFTableColumn {
      * sets the font color for the heading or when set to null signals
      * to use the font color used for all other cells
      *
-     * @param headingFontColor
-     * @return
+     * @param headingFontColor the font color
+     * @return this object for chaining
      */
     public PDFTableColumn setHeadingFontColor(Color headingFontColor) {
         this.headingFontColor = headingFontColor;
@@ -205,7 +205,7 @@ public class PDFTableColumn {
      * color for the normal cells when no special background color is set for the
      * heading
      *
-     * @return
+     * @return the color
      */
     public Color getHeadingBackgroundColor() {
         return headingBackgroundColor != null
@@ -217,8 +217,8 @@ public class PDFTableColumn {
      * sets the heading background color for the heading or when set
      * to null signals to use the background color used for all other cells
      *
-     * @param headingBackgroundColor
-     * @return
+     * @param headingBackgroundColor background color
+     * @return this object for chaining
      */
     public PDFTableColumn setHeadingBackgroundColor(Color headingBackgroundColor) {
         this.headingBackgroundColor = headingBackgroundColor;
@@ -281,8 +281,8 @@ public class PDFTableColumn {
      * sets all surrounding borders to the given
      * border
      *
-     * @param border
-     * @return
+     * @param border the border
+     * @return this object for chaining
      */
     public PDFTableColumn setBorder(PDFTableBorder border) {
         this.setBorderLeft(border);

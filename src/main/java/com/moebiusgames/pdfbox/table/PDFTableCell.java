@@ -135,7 +135,7 @@ public class PDFTableCell {
     /**
      * returns the size in columns of this cell
      *
-     * @return
+     * @return return the size of the cell
      */
     public int getSize() {
         return size;
@@ -296,7 +296,8 @@ public class PDFTableCell {
 
     /**
      * returns the width of this cell in user space units
-     * @return
+     *
+     * @return the width of the cell
      */
     public float getWidth() {
         float total = 0;
@@ -307,9 +308,10 @@ public class PDFTableCell {
     }
 
     /**
-     * returns the width of segnement n of this (multi column) cell
-     * @param n
-     * @return
+     * returns the width of segment n of this (multi column) cell
+     *
+     * @param n number of segments
+     * @return the width of the given n next columns
      */
     public float getWidth(int n) {
         if (n < 0 || n >= this.getSize()) {
@@ -322,7 +324,7 @@ public class PDFTableCell {
      * returns the size that there is for text in this
      * cell
      *
-     * @return
+     * @return the size for text in this cell
      */
     public float getTextSpaceWidth() {
         return this.getWidth() - (this.getPaddingLeft() + this.getPaddingRight());
@@ -331,7 +333,7 @@ public class PDFTableCell {
     /**
      * merges this cell with the next n cells
      *
-     * @param n
+     * @param n number of next cells to merge
      */
     public void merge(int n) {
         if (n <= 0 || index + n >= row.cells.size()) {
@@ -765,8 +767,8 @@ public class PDFTableCell {
      * decodes all special entities from html to plain text
      * and also does not trim the text
      *
-     * @param html
-     * @return
+     * @param html the html
+     * @return returns decoded html
      */
     private String htmlToText(String html) {
         StringBuilder sb = new StringBuilder();
@@ -789,8 +791,8 @@ public class PDFTableCell {
      * does not have characters for and therefore would throw
      * an exception when rendering the content.
      *
-     * @param content
-     * @return
+     * @param content the content to be filtered
+     * @return the filtered content
      */
     private String filterPDFContent(String content) {
         //we only need to filter decendents of PDSimpleFont
