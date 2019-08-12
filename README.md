@@ -99,4 +99,4 @@ public class PDFTableExample {
 
 which will render a PDF document like this:
 
-![pdfbox-table-example](https://moebiusgames.com/files/external/github/pdfbox-table-example.png)
+![pdfbox-table-example](https://moebiusgames.com/files/external/github/pdfbox-table-example2.png)
