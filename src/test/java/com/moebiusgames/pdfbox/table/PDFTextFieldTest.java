@@ -24,7 +24,6 @@
 package com.moebiusgames.pdfbox.table;
 
 import java.io.IOException;
-import java.util.List;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -38,18 +37,14 @@ public class PDFTextFieldTest {
     @Test
     public void testSomeMethod() throws IOException {
         PDDocument doc = new PDDocument();
-        PDPage page = new PDPage(PDRectangle.A4);
-        doc.addPage(page);
+        PDPage firstPage = new PDPage(PDRectangle.A4);
+        PDFRenderContext context = new PDFRenderContext(doc, firstPage);
 
-        PDFPageWithStream currentPage = new PDFPageWithStream(doc, page);
-
-        PDFTextField textField = new PDFTextField(80 * PDFUtils.MM_TO_POINTS_72DPI);
+        PDFLabel textField = new PDFLabel(80 * PDFUtils.MM_TO_POINTS_72DPI);
         textField.setText("Hello this is a\t test €");
-        List<PDFPageWithStream> pages = textField.render(currentPage, 10 * PDFUtils.MM_TO_POINTS_72DPI, 10 * PDFUtils.MM_TO_POINTS_72DPI);
+        textField.render(context, 10 * PDFUtils.MM_TO_POINTS_72DPI, 10 * PDFUtils.MM_TO_POINTS_72DPI);
 
-        for (PDFPageWithStream aPage : pages) {
-            aPage.close();
-        }
+        context.closeAllPages();
         PDFUtils.renderPDF(doc);
     }
 

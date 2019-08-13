@@ -8,7 +8,7 @@ You can then use the library in your Maven projects like this (it's on Maven Cen
     <dependency>
         <groupId>com.moebiusgames</groupId>
         <artifactId>pdfbox-table</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
     </dependency>
 
 # License
@@ -26,15 +26,14 @@ public class PDFTableExample {
 
     public static void main(String[] args) throws Exception {
         try (PDDocument doc = new PDDocument()) {
-            PDPage page = new PDPage(PDRectangle.A4);
-            doc.addPage(page);
-            PDFPageWithStream firstPage = new PDFPageWithStream(doc, page);
+            PDPage firstPage = new PDPage(PDRectangle.A4);
+            PDFRenderContext context = new PDFRenderContext(doc, firstPage);
 
             //heading
-            PDFTextField heading = new PDFTextField((int) (PDRectangle.A4.getWidth() - 40));
+            PDFLabel heading = new PDFLabel((int) (PDRectangle.A4.getWidth() - 40));
             heading.setText("Some Heading");
-            heading.getCell().setFontSize(16);
-            List<PDFPageWithStream> pages = heading.render(firstPage, 10 * PDFUtils.MM_TO_POINTS_72DPI,
+            heading.getCell().setFontSize(16).setPaddingBottom(10 * PDFUtils.MM_TO_POINTS_72DPI);
+            heading.render(context, 10 * PDFUtils.MM_TO_POINTS_72DPI,
                     PDRectangle.A4.getHeight() - 10 * PDFUtils.MM_TO_POINTS_72DPI);
 
             PDFTable reportTable = PDFTable.createWithSomeFixedColumnWidths(
@@ -78,16 +77,13 @@ public class PDFTableExample {
                         + i + " which will span over multiple lines for sure");
             }
 
-            PDFPageWithStream lastPage = pages.get(pages.size() - 1);
-            pages = reportTable.render(lastPage,        //use the last page to start rendering
-                    10 * PDFUtils.MM_TO_POINTS_72DPI,   // margin left of 10mm
-                    // 10mm distance to the end of the last rendered element (which was the heading)
-                    // (note that the y axis starts at the lower left of the paper)
-                    lastPage.getRenderedYPosition() - 10 * PDFUtils.MM_TO_POINTS_72DPI);
+            reportTable.render(context,
+                    10 * PDFUtils.MM_TO_POINTS_72DPI   // margin left of 10mm
+            );
 
-            for (PDFPageWithStream aPage : pages) {
-                aPage.close();
-            }
+            // make sure to call this before saving the document
+            // to close all content streams on all pages
+            context.closeAllPages();
 
             doc.save(new File("test.pdf"));
         }

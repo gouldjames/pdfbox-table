@@ -71,8 +71,9 @@ public class PDFTableCell {
         this.index = cellIndex;
     }
 
-    public void setContent(String content) {
+    public PDFTableCell setContent(String content) {
         this.content = content;
+        return this;
     }
 
     public String getContent() {
@@ -97,8 +98,9 @@ public class PDFTableCell {
         return align;
     }
 
-    public void setAlign(Align align) {
+    public PDFTableCell setAlign(Align align) {
         this.align = align;
+        return this;
     }
 
     public boolean hasAlign() {
@@ -109,19 +111,22 @@ public class PDFTableCell {
         return textType;
     }
 
-    public void setTextType(TextType textType) {
+    public PDFTableCell setTextType(TextType textType) {
         this.textType = textType;
+        return this;
     }
 
-    public void setFont(PDFont font) {
+    public PDFTableCell setFont(PDFont font) {
         this.font = font;
+        return this;
     }
 
-    public void setFontSize(int fontSize) {
+    public PDFTableCell setFontSize(int fontSize) {
         if (fontSize <= 0 && fontSize != PDFTable.NOT_SET) {
             throw new IllegalArgumentException("font size must be positive");
         }
         this.fontSize = fontSize;
+        return this;
     }
 
     public boolean hasFont() {
@@ -151,8 +156,9 @@ public class PDFTableCell {
         return this.borderLeft != null;
     }
 
-    public void setBorderLeft(PDFTableBorder borderLeft) {
+    public PDFTableCell setBorderLeft(PDFTableBorder borderLeft) {
         this.borderLeft = borderLeft;
+        return this;
     }
 
     public PDFTableBorder getBorderRight() {
@@ -165,8 +171,9 @@ public class PDFTableCell {
         return this.borderRight != null;
     }
 
-    public void setBorderRight(PDFTableBorder borderRight) {
+    public PDFTableCell setBorderRight(PDFTableBorder borderRight) {
         this.borderRight = borderRight;
+        return this;
     }
 
     public PDFTableBorder getBorderTop() {
@@ -179,8 +186,9 @@ public class PDFTableCell {
         return this.borderTop != null;
     }
 
-    public void setBorderTop(PDFTableBorder borderTop) {
+    public PDFTableCell setBorderTop(PDFTableBorder borderTop) {
         this.borderTop = borderTop;
+        return this;
     }
 
     public PDFTableBorder getBorderBottom() {
@@ -193,15 +201,17 @@ public class PDFTableCell {
         return this.borderLeft != null;
     }
 
-    public void setBorderBottom(PDFTableBorder borderBottom) {
+    public PDFTableCell setBorderBottom(PDFTableBorder borderBottom) {
         this.borderBottom = borderBottom;
+        return this;
     }
 
-    public void setPadding(float padding) {
+    public PDFTableCell setPadding(float padding) {
         this.setPaddingLeft(padding);
         this.setPaddingRight(padding);
         this.setPaddingTop(padding);
         this.setPaddingBottom(padding);
+        return this;
     }
 
     public float getPaddingLeft() {
@@ -210,12 +220,13 @@ public class PDFTableCell {
                 : this.paddingLeft;
     }
 
-    public void setPaddingLeft(float paddingLeft) {
+    public PDFTableCell setPaddingLeft(float paddingLeft) {
         if ((paddingLeft < 0 && paddingLeft != PDFTable.NOT_SET)
                 || (paddingLeft + this.paddingRight >= this.getWidth())) {
             throw new IllegalArgumentException("invalid value");
         }
         this.paddingLeft = paddingLeft;
+        return this;
     }
 
     public float getPaddingRight() {
@@ -224,12 +235,13 @@ public class PDFTableCell {
                 : this.paddingRight;
     }
 
-    public void setPaddingRight(float paddingRight) {
+    public PDFTableCell setPaddingRight(float paddingRight) {
         if ((paddingRight < 0 && paddingRight != PDFTable.NOT_SET)
                 || (this.paddingLeft + paddingRight >= this.getWidth())) {
             throw new IllegalArgumentException("invalid value");
         }
         this.paddingRight = paddingRight;
+        return this;
     }
 
     public float getPaddingTop() {
@@ -238,11 +250,12 @@ public class PDFTableCell {
                 : this.paddingTop;
     }
 
-    public void setPaddingTop(float paddingTop) {
+    public PDFTableCell setPaddingTop(float paddingTop) {
         if (paddingTop < 0 && paddingTop != PDFTable.NOT_SET) {
             throw new IllegalArgumentException("invalid value");
         }
         this.paddingTop = paddingTop;
+        return this;
     }
 
     public float getPaddingBottom() {
@@ -251,11 +264,12 @@ public class PDFTableCell {
                 : this.paddingBottom;
     }
 
-    public void setPaddingBottom(float paddingBottom) {
+    public PDFTableCell setPaddingBottom(float paddingBottom) {
         if (paddingBottom < 0 && paddingBottom != PDFTable.NOT_SET) {
             throw new IllegalArgumentException("invalid value");
         }
         this.paddingBottom = paddingBottom;
+        return this;
     }
 
     public float getLineSpacingFactor() {
@@ -264,11 +278,12 @@ public class PDFTableCell {
                 : lineSpacingFactor;
     }
 
-    public void setLineSpacingFactor(float lineSpacingFactor) {
+    public PDFTableCell setLineSpacingFactor(float lineSpacingFactor) {
         if (lineSpacingFactor < 0 && lineSpacingFactor != PDFTable.NOT_SET) {
             throw new IllegalArgumentException("invalid value");
         }
         this.lineSpacingFactor = lineSpacingFactor;
+        return this;
     }
 
     public Color getFontColor() {
@@ -277,11 +292,12 @@ public class PDFTableCell {
                 : fontColor;
     }
 
-    public void setFontColor(Color fontColor) {
+    public PDFTableCell setFontColor(Color fontColor) {
         if (this.fontColor == null) {
             throw new IllegalArgumentException("null value not allowed");
         }
         this.fontColor = fontColor;
+        return this;
     }
 
     public Color getBackgroundColor() {
@@ -290,8 +306,9 @@ public class PDFTableCell {
                 : backgroundColor;
     }
 
-    public void setBackgroundColor(Color backgroundColor) {
+    public PDFTableCell setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
+        return this;
     }
 
     /**

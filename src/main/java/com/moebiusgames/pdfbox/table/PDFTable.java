@@ -29,10 +29,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 /**
  * A simple PDFTable implementation for PDFBox
@@ -108,53 +105,63 @@ public class PDFTable {
     }
 
     /**
-     * renders this table to the given document and starts at the given
-     * first page at the given coordinates.
+     * renders this table to the given document and starts at the last page directly
+     * under the last rendered element
      *
-     * @param firstPage the first page to start to render the table
+     * @param renderContext the render context that collects all pages
      * @param x the x position to render the table
-     * @param y the y position to render the table
-     * @return returns a list of pages including the given first page
      * @throws IOException
      */
-    public List<PDFPageWithStream> render(PDFPageWithStream firstPage, float x, float y) throws IOException {
-        final PDDocument doc = firstPage.getDoc();
-        final List<PDFPageWithStream> renderedPages = new ArrayList<>();
-        renderedPages.add(firstPage);
+    public void render(PDFRenderContext renderContext, float x) throws IOException {
+        render(renderContext, renderContext.getLastPage(), x,
+                renderContext.getLastPage().getRenderedYPosition());
+    }
 
-        //we make sure we create pages that have exactly the same dim
-        //as the first page
-        final PDRectangle pageSize = firstPage.getPage().getMediaBox();
+    /**
+     * renders this table to the given document and starts at the last page
+     *
+     * @param renderContext the render context that collects all pages
+     * @param x the x position to render the table
+     * @param y the y position to render the table
+     * @throws IOException
+     */
+    public void render(PDFRenderContext renderContext, float x, float y) throws IOException {
+        render(renderContext, renderContext.getLastPage(), x, y);
+    }
 
+    /**
+     * renders this table to the given document and starts at the given
+     * page at the given coordinates.
+     *
+     * @param renderContext the render context that collects all pages
+     * @param page the page to render the table to (not necessarily the last page)
+     * @param x the x position to render the table
+     * @param y the y position to render the table
+     * @throws IOException
+     */
+    public void render(PDFRenderContext renderContext, PDFPageWithStream page, float x, float y) throws IOException {
         PDFTableRow headingRow = prepareHeadingRow();
-
-        //now we know the heights so that we can render the table with correct
-        //pagination
-        PDFPageWithStream currentPage = firstPage;
-
         PagePosition pos = new PagePosition(x, y);
 
         //draw headers if needed
         if (columnHeadersMode == ColumnHeadersMode.COLUMN_HEADERS_ON_FIRST_PAGE
                 || columnHeadersMode == ColumnHeadersMode.COLUMN_HEADERS_ON_EVERY_PAGE) {
-            currentPage = renderRow(doc, currentPage, pageSize, headingRow, null, pos, x, renderedPages, true);
+            page = renderRow(page, headingRow, null, pos, x, renderContext, true);
         }
 
         for (int rowIndex = 0; rowIndex < this.rows.size(); ++rowIndex) {
             PDFTableRow row = this.rows.get(rowIndex);
-            currentPage = renderRow(doc, currentPage, pageSize, row, headingRow, pos, x, renderedPages);
+            page = renderRow(page, row, headingRow, pos, x, renderContext);
         }
-
-        return renderedPages;
     }
 
-    private PDFPageWithStream renderRow(final PDDocument doc, PDFPageWithStream currentPage, final PDRectangle pageSize,
-            PDFTableRow row, PDFTableRow headingRow, PagePosition pos, float x, final List<PDFPageWithStream> renderedPages) throws IOException {
-        return renderRow(doc, currentPage, pageSize, row, headingRow, pos, x, renderedPages, false);
+    private PDFPageWithStream renderRow(PDFPageWithStream currentPage,
+            PDFTableRow row, PDFTableRow headingRow, PagePosition pos, float x, final PDFRenderContext renderContext) throws IOException {
+        return renderRow(currentPage, row, headingRow, pos, x, renderContext, false);
     }
 
-    private PDFPageWithStream renderRow(final PDDocument doc, PDFPageWithStream currentPage, final PDRectangle pageSize,
-            PDFTableRow row, PDFTableRow headingRow, PagePosition pos, float x, final List<PDFPageWithStream> renderedPages,
+    private PDFPageWithStream renderRow(PDFPageWithStream currentPage,
+            PDFTableRow row, PDFTableRow headingRow, PagePosition pos, float x, final PDFRenderContext renderContext,
             boolean forceTopBorder) throws IOException {
 
         pos.x = x;
@@ -174,15 +181,13 @@ public class PDFTable {
         while(cellInfosList.stream().anyMatch(cellInfo -> !cellInfo.isDone())) {
 
             if (newPage) {
-                currentPage = new PDFPageWithStream(doc, new PDPage(pageSize));
-                doc.addPage(currentPage.getPage());
-                renderedPages.add(currentPage);
+                currentPage = renderContext.getOrCreateNextPage(currentPage);
 
-                pos.y = pageSize.getHeight() - pageSettings.getMarginTop();
+                pos.y = currentPage.getPage().getMediaBox().getHeight() - pageSettings.getMarginTop();
 
                 if (headingRow != null && columnHeadersMode == ColumnHeadersMode.COLUMN_HEADERS_ON_EVERY_PAGE) {
                     //recursive render headings
-                    currentPage = renderRow(doc, currentPage, pageSize, headingRow, null, pos, x, renderedPages);
+                    currentPage = renderRow(currentPage, headingRow, null, pos, x, renderContext);
                     pos.x = x;
 
                     currentPage.setRenderedYPosition(pos.y);
