@@ -184,6 +184,7 @@ public class PDFTable {
                 currentPage = renderContext.getOrCreateNextPage(currentPage);
 
                 pos.y = currentPage.getPage().getMediaBox().getHeight() - pageSettings.getMarginTop();
+                pos.x = x;
 
                 if (headingRow != null && columnHeadersMode == ColumnHeadersMode.COLUMN_HEADERS_ON_EVERY_PAGE) {
                     //recursive render headings
