@@ -1,14 +1,15 @@
 # PDFBox Table
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.mobiuscode/pdfbox-table/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.mobiuscode/pdfbox-table)
 
-A small library to add multipage table support to Apache's PDFBox (https://pdfbox.apache.org/).
+A library to add multipage table support to Apache's PDFBox (https://pdfbox.apache.org/).
 
 # How to use?
 You can then use the library in your Maven projects like this (it's on Maven Central):
 
     <dependency>
-        <groupId>com.moebiusgames</groupId>
+        <groupId>de.mobiuscode</groupId>
         <artifactId>pdfbox-table</artifactId>
-        <version>1.1.1</version>
+        <version>1.1.2</version>
     </dependency>
 
 # License
@@ -92,7 +93,3 @@ public class PDFTableExample {
 
 }
 ```
-
-which will render a PDF document like this:
-
-![pdfbox-table-example](https://moebiusgames.com/files/external/github/pdfbox-table-example2.png)

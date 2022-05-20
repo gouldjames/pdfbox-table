@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2019 Moebiusgames UG (haftungsbeschraenkt).
+ * Copyright 2019-2022 MobiusCode GmbH.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
