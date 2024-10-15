@@ -89,7 +89,7 @@ final class Utils {
             }
             return colorObject;
 
-        } else if (color.startsWith("hls")){
+        } else if (color.startsWith("hsl")){
             Pattern pattern = Pattern.compile("hsl\\( *([0-9]+), *([0-9]+)%, *([0-9]+)%\\)");
             Color colorObject = null;
             Matcher matcher = pattern.matcher(color);

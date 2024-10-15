@@ -87,7 +87,7 @@ public class PDFTableTest {
 
     @Test
     public void layoutTest3() throws Exception {
-        File targetFile = new File("C:/Temp/layout3.pdf");
+        File targetFile = new File("D:/Temp/layout3.pdf");
         PDDocument doc = new PDDocument();
         try {
             PDPage page = new PDPage(PDRectangle.A4);
@@ -133,7 +133,7 @@ public class PDFTableTest {
 
     @Test
     public void layoutTest2() throws IOException {
-        final File targetFile = new File("C:/Temp/table_html.pdf");
+        final File targetFile = new File("D:/Temp/table_html.pdf");
         final String simpleText = "Hello this is some <b><i>very</i> Bold</b> text!";
         final String complexText = "Jemand musste <font size=\"7\">Jogef K.</font> verleumdet <br/><font size=\"6\">haben</font>, denn <font size=\"5\">ohne</font> dass er etwas <i>Böses</i> getan hätte, wurde eR eines Morgens verhaftet. "
                 + "<div><b>»Wie ein Hund!«</b> sagte er, es war,</div> als sollte die <i>Scham</i> ihn überleben. Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, "
@@ -255,11 +255,11 @@ public class PDFTableTest {
                 + "<div><u>First line of underlined text<br>\n"
                 + "second line</u></div>";
 
-        String colors = "<p><u>Old Color Copy-Paste</u></p>\n"
+        String colors = "<p><u>Hex Colors</u></p>\n"
                 + "<p><span style=\"color:#009688;\">Color</span></p>\n"
-                + "<ul><li>P1</li><li>P2</li></ul><p><u>RGB Format</u></p>\n"
+                + "<p><u>RGB Format</u></p>\n"
                 + "<p><span style=\"color:rgb(255,0,0);\">Color</span></p>\n"
-                + "<p>Native format</p>\n"
+                + "<p>HSL format</p>\n"
                 + "<p><span style=\"color:hsl(240,75%,60%);\">Color</span></p>\n"
                 + "<p>“Document colors”</p>\n"
                 + "<p><span style=\"color:rgb(255,0,0);\">Color</span></p>\n"
@@ -272,10 +272,7 @@ public class PDFTableTest {
                 + "<ul><li><span style=\"color:hsl(240,75%,60%);\">p1</span></li>\n"
                 + "<li><span style=\"color:hsl(240,75%,60%);\">p2</span></li>\n"
                 + "<li><span style=\"color:hsl(240,75%,60%);\">p3</span></li></ul>\n"
-                + "<p><span style=\"color:hsl(240,75%,60%);\">later select</span></p>\n"
-                + "<ul><li><span style=\"color:hsl(60,75%,60%);\">s1</span></li>\n"
-                + "<li><span style=\"color:hsl(60,75%,60%);\">s2</span></li>\n"
-                + "<li><span style=\"color:hsl(60,75%,60%);\">s3</span></li></ul>\n"
+                + "<p><span style=\"color:hsl(240,75%,60%);\"\n"
                 + "<p>&nbsp;</p>\n";
 
 

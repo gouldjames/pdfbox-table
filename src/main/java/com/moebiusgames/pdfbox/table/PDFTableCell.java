@@ -494,7 +494,7 @@ public class PDFTableCell {
                 if (node.hasAttr("style")) {
                     if(node.attr("style").contains("color")) {
                      String style = node.attr("style").replaceAll("\\s", "");
-                     String color = style.substring(style.indexOf("color:") + 1);
+                     String color = style.substring(style.indexOf("color:") + 6);
                      color = color.substring(0, color.indexOf(";"));
 
                      frame.color = Utils.htmlColorToColor(color);
