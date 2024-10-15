@@ -46,6 +46,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
+import org.junit.Test;
 
 public class PDFTableTest {
 
@@ -84,7 +85,7 @@ public class PDFTableTest {
 //        System.out.println(node0);
     }
 
-//    @Test
+    @Test
     public void layoutTest3() throws Exception {
         File targetFile = new File("D:/Temp/layout3.pdf");
         PDDocument doc = new PDDocument();
