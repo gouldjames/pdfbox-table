@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>PdfBox-Table</name>
-    <description>A Java library to programmatically return the name of fields similar to the C# nameof() expression
+    <description>A library to add multipage table support to Apache's PDFBox
     </description>
-    <url>https://github.com/mobiuscode-de/pdfbox-table</url>
+    <url>https://github.com/mobiuscode-com/pdfbox-table</url>
     <groupId>de.mobiuscode</groupId>
     <artifactId>pdfbox-table</artifactId>
     <version>1.1.3-SNAPSHOT</version>
@@ -32,9 +32,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:https://github.com/mobiuscode-de/pdfbox-table.git</connection>
-        <developerConnection>scm:git:git@github.com:mobiuscode-de/pdfbox-table.git</developerConnection>
-        <url>https://github.com/mobiuscode-de/pdfbox-table</url>
+        <connection>scm:git:https://github.com/mobiuscode-com/pdfbox-table.git</connection>
+        <developerConnection>scm:git:git@github.com:mobiuscode-com/pdfbox-table.git</developerConnection>
+        <url>https://github.com/mobiuscode-com/pdfbox-table</url>
     </scm>
 
     <properties>
