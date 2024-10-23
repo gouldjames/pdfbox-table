@@ -16,14 +16,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Set up Java for publishing to GitHub Packages
+
+      - name: Set up Java for publishing to Maven Central Repository
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'corretto'
-      
-      - name: Publish to GitHub Packages
-        run: mvn --batch-mode deploy
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            java-version: '17'
+            distribution: 'corretto'
+            server-id: ossrh
+            server-username: ${{ secrets.OSSRH_USERNAME }}
+            server-password: ${{ secrets.OSSRH_TOKEN }}
+            gpg-private-key: ${{ secrets.GPG_KEY }}
+
+      - name: Publish package to the Maven Central Repository
+        run: mvn --batch-mode
