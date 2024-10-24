@@ -19,7 +19,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
-          cache: maven
           server-id: ossrh
           server-username: ${{ secrets.OSSRH_USERNAME }}
           server-password: ${{ secrets.OSSRH_TOKEN }}
