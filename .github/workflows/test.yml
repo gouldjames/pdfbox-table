@@ -19,19 +19,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
-          server-id: ossrh
-          server-username: ${{ secrets.OSSRH_USERNAME }}
-          server-password: ${{ secrets.OSSRH_TOKEN }}
-
-      - name: Import GPG
-        uses: crazy-max/ghaction-import-gpg@v6.1.0
-        with:
-          gpg_private_key: GPG_PRIVATE_KEY
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_KEY }}
 
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots verify
-
-#      - name: Publish package to the Maven Central Repository
-#        run: mvn --batch-mode
+        run: mvn --batch-mode --update-snapshots test
