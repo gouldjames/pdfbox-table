@@ -28,7 +28,7 @@ jobs:
         with:
           gpg_private_key: GPG_PRIVATE_KEY
         env:
-          GPG_PRIVATE_KEY: ${{ TEST }}
+          GPG_PRIVATE_KEY: $TEST
 
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
