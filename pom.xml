@@ -9,7 +9,7 @@
     <url>https://github.com/mobiuscode-com/pdfbox-table</url>
     <groupId>de.mobiuscode</groupId>
     <artifactId>pdfbox-table</artifactId>
-    <version>1.6.1-SNAPSHOT</version>
+    <version>1.7.0-SNAPSHOT</version>
 
     <organization>
         <name>MobiusCode GmbH</name>
