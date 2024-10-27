@@ -9,12 +9,19 @@
     <url>https://github.com/mobiuscode-com/pdfbox-table</url>
     <groupId>de.mobiuscode</groupId>
     <artifactId>pdfbox-table</artifactId>
-    <version>1.1.5-SNAPSHOT</version>
+    <version>1.6.1-SNAPSHOT</version>
 
     <organization>
         <name>MobiusCode GmbH</name>
         <url>https://mobiuscode.de</url>
     </organization>
+
+    <developers>
+        <developer>
+            <id>entrusc</id>
+            <name>Florian Frankenberger</name>
+        </developer>
+    </developers>
 
     <licenses>
         <license>
