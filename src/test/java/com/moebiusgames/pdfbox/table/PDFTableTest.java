@@ -131,7 +131,7 @@ public class PDFTableTest {
         }
     }
 
-    @Test
+//    @Test
     public void layoutTest2() throws IOException {
         final File targetFile = new File("D:/Temp/table_html.pdf");
         final String simpleText = "Hello this is some <b><i>very</i> Bold</b> text!";
