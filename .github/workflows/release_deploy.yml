@@ -1,0 +1,40 @@
+﻿# Remember to keep tags to the version only (e.g. 1.2.3 and NOT v1.2.3), because this version will be used for maven central!
+name: Deploy Releases to Maven Central
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+          server-id: ossrh
+          server-username: SERVER_USERNAME
+          server-password: SERVER_PASSWORD
+
+      - name: Import GPG
+        uses: crazy-max/ghaction-import-gpg@v6.1.0
+        with:
+          gpg_private_key: ${{ secrets.GPG_KEY }}
+
+      - name: Extract Tag Name
+        id: extract_tag
+        run: echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+      - name: Set Version
+        run: mvn versions:set -DnewVersion=${{ env.TAG_NAME }}
+
+      - name: Publish package to the Maven Central Repository
+        env:
+          SERVER_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          SERVER_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+        run: mvn --batch-mode clean deploy -P release

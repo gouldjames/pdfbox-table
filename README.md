@@ -9,7 +9,7 @@ You can then use the library in your Maven projects like this (it's on Maven Cen
     <dependency>
         <groupId>de.mobiuscode</groupId>
         <artifactId>pdfbox-table</artifactId>
-        <version>1.1.2</version>
+        <version>1.6.1</version>
     </dependency>
 
 # License
