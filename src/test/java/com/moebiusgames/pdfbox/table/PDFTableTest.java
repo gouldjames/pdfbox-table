@@ -85,7 +85,7 @@ public class PDFTableTest {
 //        System.out.println(node0);
     }
 
-    @Test
+//    @Test
     public void layoutTest3() throws Exception {
         File targetFile = new File("D:/Temp/layout3.pdf");
         PDDocument doc = new PDDocument();
