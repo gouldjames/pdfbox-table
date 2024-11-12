@@ -63,6 +63,7 @@ public class PDFTableCell {
     private Color fontColor = PDFTable.NOT_SET_COLOR;
     private Color backgroundColor = PDFTable.NOT_SET_COLOR;
     private float lineSpacingFactor = PDFTable.NOT_SET;
+    private Boolean underline = null;
     private final PDFTable table;
 
     PDFTableCell(PDFTableRow row, int cellIndex, final PDFTable table) {
@@ -311,6 +312,17 @@ public class PDFTableCell {
         return this;
     }
 
+    public Boolean getUnderline() {
+        return underline == null
+                ? table.getColumn(index).getUnderline()
+                : underline;
+    }
+
+    public PDFTableCell setUnderline(Boolean underline) {
+        this.underline = underline;
+        return this;
+    }
+
     /**
      * returns the width of this cell in user space units
      *
@@ -440,6 +452,7 @@ public class PDFTableCell {
 
         switch (node.nodeName().toLowerCase()) {
             case "div":
+            case "p":
                 newLineLayout.setConditionalNewLine(1);
                 break;
             case "br":
@@ -456,10 +469,14 @@ public class PDFTableCell {
                 frame.indent++;
                 break;
             case "b":
+            case "strong":
                 frame.bold = true;
                 break;
             case "i":
                 frame.italic = true;
+                break;
+            case "u":
+                frame.underline = true;
                 break;
             case "font":
                 if (node.hasAttr("size")) {
@@ -471,6 +488,17 @@ public class PDFTableCell {
                 }
                 if (node.hasAttr("color")) {
                     frame.color = Utils.htmlColorToColor(node.attr("color"));
+                }
+                break;
+            case "span":
+                if (node.hasAttr("style")) {
+                    if(node.attr("style").contains("color")) {
+                     String style = node.attr("style").replaceAll("\\s", "");
+                     String color = style.substring(style.indexOf("color:") + 6);
+                     color = color.substring(0, color.indexOf(";"));
+
+                     frame.color = Utils.htmlColorToColor(color);
+                    }
                 }
                 break;
             case "ul":
@@ -767,6 +795,19 @@ public class PDFTableCell {
                 stream.showText(block.getContent());
                 stream.endText();
 
+                if (block.getUnderline()) {
+                    float tx = x + getPaddingLeft() + offsetX + rowShiftX;
+                    float ty = y - getPaddingTop() + offsetY;
+
+                    float stringWidth = block.getFontSize() * block.getFont().getStringWidth(block.getContent()) / 1000;
+                    float lineEndPoint = tx + stringWidth;
+
+                    stream.setLineWidth(1);
+                    stream.moveTo(tx, ty - 2);
+                    stream.lineTo(lineEndPoint, ty - 2);
+                    stream.stroke();
+                }
+
                 offsetX += block.getWidth();
             }
             offsetX = 0;
@@ -1005,9 +1046,11 @@ public class PDFTableCell {
         private Integer fontSize = null; //not set
         private Color fontColor = null; //not set
         private int indent = 0;
+        private Boolean underline = false;
 
         public LaidoutContentBlock(LayoutFrame fromFrame) {
             this.indent = fromFrame.indent;
+            this.underline = fromFrame.underline;
 
             this.bulletPoint = fromFrame.bulletPoint;
             if (fromFrame.bold != null
@@ -1067,6 +1110,12 @@ public class PDFTableCell {
                     : this.fontColor;
         }
 
+        public Boolean getUnderline() {
+            return this.underline == null
+                    ? PDFTableCell.this.getUnderline()
+                    : this.underline;
+        }
+
         public int getIndent() {
             return indent;
         }
@@ -1113,6 +1162,7 @@ public class PDFTableCell {
         private Integer htmlSize = null;
         private Boolean bold = null;
         private Boolean italic = null;
+        private Boolean underline = null;
 
         public LayoutFrame() {
         }
@@ -1124,6 +1174,7 @@ public class PDFTableCell {
             this.htmlSize = frame.htmlSize;
             this.bold = frame.bold;
             this.italic = frame.italic;
+            this.underline = frame.underline;
         }
 
     }

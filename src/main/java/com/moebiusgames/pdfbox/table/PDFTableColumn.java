@@ -62,6 +62,7 @@ public class PDFTableColumn {
     private Color backgroundColor = null;
     private float lineSpacingFactor = 0.2f;
     private String heading = "[N/A]";
+    private Boolean underline = false;
     private final PDFTable table;
 
     PDFTableColumn(final PDFTable table, float width) {
@@ -378,6 +379,15 @@ public class PDFTableColumn {
 
     public PDFTableColumn setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
+        return this;
+    }
+
+    public Boolean getUnderline() {
+        return underline;
+    }
+
+    public PDFTableColumn setUnderline(Boolean underline) {
+        this.underline = underline;
         return this;
     }
 

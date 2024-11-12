@@ -46,6 +46,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
+import org.junit.Test;
 
 public class PDFTableTest {
 
@@ -84,7 +85,7 @@ public class PDFTableTest {
 //        System.out.println(node0);
     }
 
-//    @Test
+    @Test
     public void layoutTest3() throws Exception {
         File targetFile = new File("D:/Temp/layout3.pdf");
         PDDocument doc = new PDDocument();
@@ -130,8 +131,9 @@ public class PDFTableTest {
         }
     }
 
+    @Test
     public void layoutTest2() throws IOException {
-        final File targetFile = new File("D:/temp/table_html.pdf");
+        final File targetFile = new File("D:/Temp/table_html.pdf");
         final String simpleText = "Hello this is some <b><i>very</i> Bold</b> text!";
         final String complexText = "Jemand musste <font size=\"7\">Jogef K.</font> verleumdet <br/><font size=\"6\">haben</font>, denn <font size=\"5\">ohne</font> dass er etwas <i>Böses</i> getan hätte, wurde eR eines Morgens verhaftet. "
                 + "<div><b>»Wie ein Hund!«</b> sagte er, es war,</div> als sollte die <i>Scham</i> ihn überleben. Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, "
@@ -247,8 +249,34 @@ public class PDFTableTest {
                 + "   </blockquote>\n"
                 + "</blockquote>";
 
+        String underlined = "<div><u>some underlined text</u> and here some non underlined text.<br>\n"
+                + "<u><strong><i>and here it's underlined, bold and italic!</i></strong></u></div>\n"
+                + "<div>here is plain text again</div>\n"
+                + "<div><u>First line of underlined text<br>\n"
+                + "second line</u></div>";
 
-        PDDocument doc = new PDDocument();
+        String colors = "<p><u>Hex Colors</u></p>\n"
+                + "<p><span style=\"color:#009688;\">Color</span></p>\n"
+                + "<p><u>RGB Format</u></p>\n"
+                + "<p><span style=\"color:rgb(255,0,0);\">Color</span></p>\n"
+                + "<p>HSL format</p>\n"
+                + "<p><span style=\"color:hsl(240,75%,60%);\">Color</span></p>\n"
+                + "<p>“Document colors”</p>\n"
+                + "<p><span style=\"color:rgb(255,0,0);\">Color</span></p>\n"
+                + "<h2><span style=\"color:hsl(60,75%,60%);\">Title and Color</span></h2>\n"
+                + "<h3><span style=\"color:hsl(30,75%,60%);\">Title 2 and Color</span></h3>\n"
+                + "<ul><li><span style=\"color:#009688;\">c1</span></li>\n"
+                + "<li><span style=\"color:rgb(255,0,0);\">c2</span></li>\n"
+                + "<li><span style=\"color:hsl(240,75%,60%);\">c3</span></li></ul>\n"
+                + "<p>all color points</p>\n"
+                + "<ul><li><span style=\"color:hsl(240,75%,60%);\">p1</span></li>\n"
+                + "<li><span style=\"color:hsl(240,75%,60%);\">p2</span></li>\n"
+                + "<li><span style=\"color:hsl(240,75%,60%);\">p3</span></li></ul>\n"
+                + "<p><span style=\"color:hsl(240,75%,60%);\"\n"
+                + "<p>&nbsp;</p>\n";
+
+
+                PDDocument doc = new PDDocument();
         try {
             PDPage firstPage = new PDPage(PDRectangle.A4);
             PDFRenderContext context = new PDFRenderContext(doc, firstPage);
@@ -275,7 +303,9 @@ public class PDFTableTest {
             for (int i = 0; i < 1; ++i) {
                 PDFTableRow row = reportTable.addRow();
 //                row.getCell(COL_SOMETHING).setContent(complexText);
-                row.getCell(COL_DOCUMENTATION).setContent(bulletPoints);
+//                row.getCell(COL_DOCUMENTATION).setContent(underlined);
+//                row.getCell(COL_DOCUMENTATION).setContent(html2Text);
+                row.getCell(COL_DOCUMENTATION).setContent(colors);
                 row.getCell(COL_DOCUMENTATION).setTextType(TextType.HTML);
             }
 

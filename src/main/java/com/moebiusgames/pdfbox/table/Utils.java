@@ -27,6 +27,8 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
@@ -74,6 +76,32 @@ final class Utils {
                 return new Color(Integer.parseInt(color.substring(1), 16));
             } catch (NumberFormatException e) {
             }
+        } else if (color.startsWith("rgb")) {
+            Pattern pattern = Pattern.compile("rgb\\( *([0-9]+), *([0-9]+), *([0-9]+)\\)");
+            Color colorObject = null;
+            Matcher matcher = pattern.matcher(color);
+            if (matcher.matches()) {
+                colorObject =
+                        new Color(
+                                Integer.parseInt(matcher.group(1)),
+                                Integer.parseInt(matcher.group(2)),
+                                Integer.parseInt(matcher.group(3)));
+            }
+            return colorObject;
+
+        } else if (color.startsWith("hsl")){
+            Pattern pattern = Pattern.compile("hsl\\( *([0-9]+), *([0-9]+)%, *([0-9]+)%\\)");
+            Color colorObject = null;
+            Matcher matcher = pattern.matcher(color);
+
+            if (matcher.matches()) {
+                colorObject =
+                        ColorUtils.getHSLColor(
+                                Integer.parseInt(matcher.group(1)),
+                                Integer.parseInt(matcher.group(2)),
+                                Integer.parseInt(matcher.group(3)));
+            }
+            return colorObject;
         } else {
             switch (color.trim().toLowerCase()) {
                 case "black":
