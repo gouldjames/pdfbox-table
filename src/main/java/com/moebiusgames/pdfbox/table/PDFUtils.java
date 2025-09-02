@@ -33,6 +33,7 @@ import java.util.Set;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 
 public final class PDFUtils {
 
@@ -45,15 +46,24 @@ public final class PDFUtils {
 
     static {
         NO_BORDER.setLineWidth(0);
-        BOLD_FONT_VARIANTS.put(PDType1Font.COURIER, PDType1Font.COURIER_BOLD);
-        BOLD_FONT_VARIANTS.put(PDType1Font.HELVETICA, PDType1Font.HELVETICA_BOLD);
-        BOLD_FONT_VARIANTS.put(PDType1Font.TIMES_ROMAN, PDType1Font.TIMES_BOLD);
+        BOLD_FONT_VARIANTS.put(
+            new PDType1Font(Standard14Fonts.FontName.COURIER),
+            new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD)
+        );
+        BOLD_FONT_VARIANTS.put(
+            new PDType1Font(Standard14Fonts.FontName.HELVETICA),
+            new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD)
+        );
+        BOLD_FONT_VARIANTS.put(
+            new PDType1Font(Standard14Fonts.FontName.TIMES_ROMAN),
+            new PDType1Font(Standard14Fonts.FontName.TIMES_BOLD)
+        );
     }
 
     public static PDFont getBoldVariant(PDFont font) {
         PDFont result = BOLD_FONT_VARIANTS.get(font);
         if (result == null) {
-            result = PDType1Font.HELVETICA_BOLD; //<- default
+            result = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD); //<- default
         }
         return result;
     }
@@ -70,74 +80,59 @@ public final class PDFUtils {
 
     public static PDFont modifyFont(PDFont font, Set<FontModifier> modifiers) {
         final PDFont baseFont;
-        if (font.equals(PDType1Font.TIMES_ROMAN)
-                || font.equals(PDType1Font.TIMES_BOLD)
-                || font.equals(PDType1Font.TIMES_ITALIC)
-                || font.equals(PDType1Font.TIMES_BOLD_ITALIC)) {
-            baseFont = PDType1Font.TIMES_ROMAN;
-        } else
-            if (font.equals(PDType1Font.COURIER)
-                    || font.equals(PDType1Font.COURIER_BOLD)
-                    || font.equals(PDType1Font.COURIER_OBLIQUE)
-                    || font.equals(PDType1Font.COURIER_BOLD_OBLIQUE)) {
-                baseFont = PDType1Font.COURIER;
-            } else
-                if (font.equals(PDType1Font.HELVETICA)
-                        || font.equals(PDType1Font.HELVETICA_BOLD)
-                        || font.equals(PDType1Font.HELVETICA_OBLIQUE)
-                        || font.equals(PDType1Font.HELVETICA_BOLD_OBLIQUE)) {
-                    baseFont = PDType1Font.HELVETICA;
-                } else {
-                    throw new IllegalArgumentException("This font is not supported");
-                }
+        if (font.equals(new PDType1Font(Standard14Fonts.FontName.TIMES_ROMAN))
+                || font.equals(new PDType1Font(Standard14Fonts.FontName.TIMES_BOLD))
+                || font.equals(new PDType1Font(Standard14Fonts.FontName.TIMES_ITALIC))
+                || font.equals(new PDType1Font(Standard14Fonts.FontName.TIMES_BOLD_ITALIC))) {
+            baseFont = new PDType1Font(Standard14Fonts.FontName.TIMES_ROMAN);
+        } else if (font.equals(new PDType1Font(Standard14Fonts.FontName.COURIER))
+                || font.equals(new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD))
+                || font.equals(new PDType1Font(Standard14Fonts.FontName.COURIER_OBLIQUE))
+                || font.equals(new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD_OBLIQUE))) {
+            baseFont = new PDType1Font(Standard14Fonts.FontName.COURIER);
+        } else if (font.equals(new PDType1Font(Standard14Fonts.FontName.HELVETICA))
+                || font.equals(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD))
+                || font.equals(new PDType1Font(Standard14Fonts.FontName.HELVETICA_OBLIQUE))
+                || font.equals(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD_OBLIQUE))) {
+            baseFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+        } else {
+            throw new IllegalArgumentException("This font is not supported");
+        }
 
-        if (baseFont == PDType1Font.TIMES_ROMAN) {
-            if (modifiers.contains(FontModifier.BOLD)
-                    && modifiers.contains(FontModifier.ITALIC)) {
-                return PDType1Font.TIMES_BOLD_ITALIC;
+        if (baseFont.equals(new PDType1Font(Standard14Fonts.FontName.TIMES_ROMAN))) {
+            if (modifiers.contains(FontModifier.BOLD) && modifiers.contains(FontModifier.ITALIC)) {
+                return new PDType1Font(Standard14Fonts.FontName.TIMES_BOLD_ITALIC);
             }
-
             if (modifiers.contains(FontModifier.BOLD)) {
-                return PDType1Font.TIMES_BOLD;
+                return new PDType1Font(Standard14Fonts.FontName.TIMES_BOLD);
             }
-
             if (modifiers.contains(FontModifier.ITALIC)) {
-                return PDType1Font.TIMES_ITALIC;
+                return new PDType1Font(Standard14Fonts.FontName.TIMES_ITALIC);
             }
-
             return baseFont;
-        } else
-            if (baseFont == PDType1Font.COURIER) {
-                if (modifiers.contains(FontModifier.BOLD)
-                        && modifiers.contains(FontModifier.ITALIC)) {
-                    return PDType1Font.COURIER_BOLD_OBLIQUE;
-                }
-
-                if (modifiers.contains(FontModifier.BOLD)) {
-                    return PDType1Font.COURIER_BOLD;
-                }
-
-                if (modifiers.contains(FontModifier.ITALIC)) {
-                    return PDType1Font.COURIER_OBLIQUE;
-                }
-
-                return baseFont;
-            } else {
-                if (modifiers.contains(FontModifier.BOLD)
-                        && modifiers.contains(FontModifier.ITALIC)) {
-                    return PDType1Font.HELVETICA_BOLD_OBLIQUE;
-                }
-
-                if (modifiers.contains(FontModifier.BOLD)) {
-                    return PDType1Font.HELVETICA_BOLD;
-                }
-
-                if (modifiers.contains(FontModifier.ITALIC)) {
-                    return PDType1Font.HELVETICA_OBLIQUE;
-                }
-
-                return baseFont;
+        } else if (baseFont.equals(new PDType1Font(Standard14Fonts.FontName.COURIER))) {
+            if (modifiers.contains(FontModifier.BOLD) && modifiers.contains(FontModifier.ITALIC)) {
+                return new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD_OBLIQUE);
             }
+            if (modifiers.contains(FontModifier.BOLD)) {
+                return new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD);
+            }
+            if (modifiers.contains(FontModifier.ITALIC)) {
+                return new PDType1Font(Standard14Fonts.FontName.COURIER_OBLIQUE);
+            }
+            return baseFont;
+        } else {
+            if (modifiers.contains(FontModifier.BOLD) && modifiers.contains(FontModifier.ITALIC)) {
+                return new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD_OBLIQUE);
+            }
+            if (modifiers.contains(FontModifier.BOLD)) {
+                return new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+            }
+            if (modifiers.contains(FontModifier.ITALIC)) {
+                return new PDType1Font(Standard14Fonts.FontName.HELVETICA_OBLIQUE);
+            }
+            return baseFont;
+        }
     }
 
     public static enum FontModifier {
