@@ -42,8 +42,18 @@ public class PDFRenderContext {
     public PDFRenderContext(PDDocument document, PDPage firstPage) {
         this.document = document;
 
+        // Only add the first page to the document if it is not already present
         this.pages.add(new PDFPageWithStream(document, firstPage));
-        document.addPage(firstPage);
+        boolean alreadyPresent = false;
+        for (PDPage page : document.getPages()) {
+            if (page.getCOSObject() == firstPage.getCOSObject()) {
+                alreadyPresent = true;
+                break;
+            }
+        }
+        if (!alreadyPresent) {
+            document.addPage(firstPage);
+        }
     }
 
     public PDFPageWithStream getLastPage() {

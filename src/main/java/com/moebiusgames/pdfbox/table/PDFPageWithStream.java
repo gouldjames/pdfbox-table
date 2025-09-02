@@ -27,6 +27,7 @@ import java.io.IOException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 
 /**
  * A simple class that contains of a page
@@ -66,7 +67,7 @@ public class PDFPageWithStream {
 
     public PDPageContentStream getOrCreateStream() throws IOException {
         if (this.stream == null) {
-            this.stream = new PDPageContentStream(doc, page);
+            this.stream = new PDPageContentStream(doc, page, AppendMode.APPEND, true, true);
         }
         return this.stream;
     }
