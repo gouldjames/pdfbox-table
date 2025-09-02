@@ -94,15 +94,32 @@ public class PDFRenderContext {
         return pages.get(index + 1);
     }
 
-    public PDFPageWithStream addPage() {
-        final PDFPageWithStream lastPage = getLastPage();
-        final PDPage newPdPage = new PDPage(lastPage.getPage().getMediaBox());
+    public PDFPageWithStream addPageAfter(PDFPageWithStream afterPage) {
+        int afterIndex = pages.indexOf(afterPage);
+        if (afterIndex < 0) {
+            throw new IllegalArgumentException("Not a page of this context");
+        }
+        final PDPage newPdPage = new PDPage(afterPage.getPage().getMediaBox());
         PDFPageWithStream newPage = new PDFPageWithStream(document, newPdPage);
 
-        pages.add(newPage);
-        document.addPage(newPdPage);
+        // Insert into pages list
+        pages.add(afterIndex + 1, newPage);
+        // Insert into document after the current page
+        int docIndex = 0;
+        for (PDPage page : document.getPages()) {
+            if (page.getCOSObject() == afterPage.getPage().getCOSObject()) {
+                break;
+            }
+            docIndex++;
+        }
+        document.getPages().insertAfter(newPdPage, document.getPage(docIndex));
 
         return newPage;
+    }
+
+    // For backward compatibility, keep addPage() as adding after the last page
+    public PDFPageWithStream addPage() {
+        return addPageAfter(getLastPage());
     }
 
     public void closeAllPages() throws IOException {
