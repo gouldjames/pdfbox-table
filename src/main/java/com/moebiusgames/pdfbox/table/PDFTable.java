@@ -29,12 +29,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 /**
  * A simple PDFTable implementation for PDFBox
  */
 public class PDFTable {
+
+    // Log4j
+    private static final Logger log = Logger.getLogger(PDFTable.class);
 
     public static int NOT_SET = -1;
     public static final float AUTO_DETERMINE_COLUMN_WIDTH = Float.NEGATIVE_INFINITY;
@@ -109,7 +114,7 @@ public class PDFTable {
      * under the last rendered element
      *
      * @param renderContext the render context that collects all pages
-     * @param x the x position to render the table
+     * @param x             the x position to render the table
      * @throws IOException
      */
     public void render(PDFRenderContext renderContext, float x) throws IOException {
@@ -121,8 +126,8 @@ public class PDFTable {
      * renders this table to the given document and starts at the last page
      *
      * @param renderContext the render context that collects all pages
-     * @param x the x position to render the table
-     * @param y the y position to render the table
+     * @param x             the x position to render the table
+     * @param y             the y position to render the table
      * @throws IOException
      */
     public void render(PDFRenderContext renderContext, float x, float y) throws IOException {
@@ -134,16 +139,18 @@ public class PDFTable {
      * page at the given coordinates.
      *
      * @param renderContext the render context that collects all pages
-     * @param page the page to render the table to (not necessarily the last page)
-     * @param x the x position to render the table
-     * @param y the y position to render the table
+     * @param page          the page to render the table to (not necessarily the
+     *                      last page)
+     * @param x             the x position to render the table
+     * @param y             the y position to render the table
      * @throws IOException
      */
     public void render(PDFRenderContext renderContext, PDFPageWithStream page, float x, float y) throws IOException {
+        log.debug("Rendering table at position x=" + x + ", y=" + y);
         PDFTableRow headingRow = prepareHeadingRow();
         PagePosition pos = new PagePosition(x, y);
 
-        //draw headers if needed
+        // draw headers if needed
         if (columnHeadersMode == ColumnHeadersMode.COLUMN_HEADERS_ON_FIRST_PAGE
                 || columnHeadersMode == ColumnHeadersMode.COLUMN_HEADERS_ON_EVERY_PAGE) {
             page = renderRow(page, headingRow, null, pos, x, renderContext, true);
@@ -156,7 +163,8 @@ public class PDFTable {
     }
 
     private PDFPageWithStream renderRow(PDFPageWithStream currentPage,
-            PDFTableRow row, PDFTableRow headingRow, PagePosition pos, float x, final PDFRenderContext renderContext) throws IOException {
+            PDFTableRow row, PDFTableRow headingRow, PagePosition pos, float x, final PDFRenderContext renderContext)
+            throws IOException {
         return renderRow(currentPage, row, headingRow, pos, x, renderContext, false);
     }
 
@@ -176,9 +184,9 @@ public class PDFTable {
         float freeSpace = pos.y - pageSettings.getMarginBottom();
         boolean newPage = freeSpace <= 0;
 
-        //we write out pages as long as we have cells that have not rendered
-        //all of their content yet
-        while(cellInfosList.stream().anyMatch(cellInfo -> !cellInfo.isDone())) {
+        // we write out pages as long as we have cells that have not rendered
+        // all of their content yet
+        while (cellInfosList.stream().anyMatch(cellInfo -> !cellInfo.isDone())) {
 
             if (newPage) {
                 currentPage = renderContext.getOrCreateNextPage(currentPage);
@@ -187,7 +195,7 @@ public class PDFTable {
                 pos.x = x;
 
                 if (headingRow != null && columnHeadersMode == ColumnHeadersMode.COLUMN_HEADERS_ON_EVERY_PAGE) {
-                    //recursive render headings
+                    // recursive render headings
                     currentPage = renderRow(currentPage, headingRow, null, pos, x, renderContext);
                     pos.x = x;
 
@@ -197,47 +205,63 @@ public class PDFTable {
                 freeSpace = pos.y - pageSettings.getMarginBottom();
             }
 
-            //we add in-cell rows to each cell for as long as all of them stay below the
-            //free space that we still have (aka. Layout cells)
+            // we add in-cell rows to each cell for as long as all of them stay below the
+            // free space that we still have (aka. Layout cells)
             List<CellRenderInfo> cellInfosQueue = new LinkedList<>(cellInfosList);
             while (!cellInfosQueue.isEmpty()) {
                 final Iterator<CellRenderInfo> iterator = cellInfosQueue.iterator();
                 while (iterator.hasNext()) {
                     final CellRenderInfo cellInfo = iterator.next();
 
-                    //everything already rendered? -> done
+                    // everything already rendered? -> done
                     if (cellInfo.isDone()) {
                         iterator.remove();
                     } else {
-                        //can't add more in-cell rows? -> done
+                        // can't add more in-cell rows? -> done
                         if (!cellInfo.incEndRow()) {
                             iterator.remove();
-                        } else
-                            //takes more space than available? -> done
+                        } else {
+                            // --- Disable splitting behaviour ---
+                            // If the full row height doesn't fit, move the entire row to the next page
+                            float rowHeight = row.getMaxHeight();
+                            if (rowHeight > freeSpace) {
+                                currentPage = renderContext.getOrCreateNextPage(currentPage);
+                                pos.y = currentPage.getPage().getMediaBox().getHeight() - pageSettings.getMarginTop();
+                                freeSpace = pos.y - pageSettings.getMarginBottom();
+
+                                if (headingRow != null
+                                        && columnHeadersMode == ColumnHeadersMode.COLUMN_HEADERS_ON_EVERY_PAGE) {
+                                    currentPage = renderRow(currentPage, headingRow, null, pos, x, renderContext);
+                                    pos.x = x;
+                                    currentPage.setRenderedYPosition(pos.y);
+                                }
+                            }
                             if (cellInfo.getHeight() > freeSpace) {
+                                // takes more space than available? -> done
                                 cellInfo.decEndRow();
                                 iterator.remove();
                             }
+                        }
                     }
                 }
             }
 
-            //determine max height of all cells
+            // determine max height of all cells
             float maxHeight = cellInfosList.stream()
                     .map(cellInfo -> cellInfo.getHeight())
                     .max(Float::compare).orElse(0f);
 
-            //next: we actually render the cells' content
+            // next: we actually render the cells' content
             final boolean pageBreakBefore = currentPage.isFreshPage();
             for (CellRenderInfo cellInfo : cellInfosList) {
                 cellInfo.render(currentPage.getOrCreateStream(), pos, maxHeight, pageBreakBefore, forceTopBorder);
             }
             pos.y -= maxHeight;
 
-            //if we do another loop, we need a new page!
+            // if we do another loop, we need a new page!
             newPage = true;
 
-            //update rendered y pos
+            // update rendered y pos
             currentPage.setRenderedYPosition(pos.y);
         }
 
@@ -245,7 +269,7 @@ public class PDFTable {
     }
 
     private PDFTableRow prepareHeadingRow() {
-        //prepare heading row
+        // prepare heading row
         PDFTableRow headingRow = new PDFTableRow(this, -1);
         for (int colIndex = 0; colIndex < this.columns.size(); ++colIndex) {
             final PDFTableCell cell = headingRow.getCell(colIndex);
@@ -278,8 +302,8 @@ public class PDFTable {
         final float headingRowHeight = headingRow.getMaxHeight();
         return rowHeights.stream().reduce(0f, (sum, height) -> sum += height, (sum1, sum2) -> sum1 + sum2) +
                 (this.getColumnHeadersMode() == ColumnHeadersMode.NO_COLUMN_HEADERS
-                ? 0
-                : headingRowHeight);
+                        ? 0
+                        : headingRowHeight);
     }
 
     private List<Float> getRowHeights() throws IOException {
@@ -296,7 +320,7 @@ public class PDFTable {
      * the table and sets the column's with as a pecentage
      * of that width
      *
-     * @param tableWidth the total table width
+     * @param tableWidth         the total table width
      * @param columnWidthPercent the percentages for the columns
      * @return returns a new PDFTable object
      */
@@ -319,7 +343,7 @@ public class PDFTable {
      * up between the columns that have the value of constant
      * AUTO_DETERMINE_COLUMN_WIDTH.
      *
-     * @param tableWidth the total width
+     * @param tableWidth   the total width
      * @param columnWidths the fixed widths for the columns
      * @return returns a new PDFTable object
      */
