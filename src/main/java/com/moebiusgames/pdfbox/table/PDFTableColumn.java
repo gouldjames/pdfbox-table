@@ -65,10 +65,10 @@ public class PDFTableColumn {
     private float lineSpacingFactor = 0.2f;
     private String heading = "[N/A]";
     private Boolean underline = false;
-    private final PDFTable table;
+    // private final PDFTable table;
 
     PDFTableColumn(final PDFTable table, float width) {
-        this.table = table;
+        // this.table = table;
         this.width = width;
     }
 

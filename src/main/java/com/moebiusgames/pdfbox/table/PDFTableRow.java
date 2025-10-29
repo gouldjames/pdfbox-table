@@ -32,10 +32,10 @@ public class PDFTableRow {
     private final int index;
     final List<PDFTableCell> cells = new ArrayList<>();
     private float minHeight = 0;
-    private final PDFTable table;
+    // private final PDFTable table;
 
     PDFTableRow(final PDFTable table, int index) {
-        this.table = table;
+        // this.table = table;
         this.index = index;
         for (int i = 0; i < table.getColumns(); ++i) {
             this.cells.add(new PDFTableCell(this, i, table));

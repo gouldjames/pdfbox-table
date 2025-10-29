@@ -48,12 +48,14 @@ final class Utils {
         }
     }
 
+    @SuppressWarnings("deprecation")
     static synchronized float getFontHeight(PDFont font, float fontSize) {
         try {
             String key = font.getName() + "_" + font.getType() + "_" + font.getSubType();
             Float lineHeight = FONT_HEIGHT_CACHE.get(key);
             if (lineHeight == null) {
                 lineHeight = 0f;
+                
                 for (char c : new char[]{
                     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
